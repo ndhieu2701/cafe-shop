@@ -8,9 +8,9 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 import { Suspense } from "react";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Home from "./pages/home";
 import ErrorPage from "./pages/error";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,7 +25,7 @@ const queryClient = new QueryClient({
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
-      <Route path="/" element={<Home />}></Route>
+      <Route path="/" element={<Home />} />
       <Route path="*" element={<ErrorPage />}/>
     </Route>
   )
