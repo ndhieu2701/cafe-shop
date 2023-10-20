@@ -5,7 +5,14 @@ export default {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        "coffee-bg": "url('./assets/coffee-bg.jpg')",
+      },
+      colors: {
+        "main-color": "#895a42"
+      }
+    },
   },
   plugins: [],
 };
