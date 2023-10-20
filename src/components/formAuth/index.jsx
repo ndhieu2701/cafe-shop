@@ -1,7 +1,7 @@
 import { Form, Input } from "antd";
 import React, { useEffect } from "react";
 import { login, register } from "../../api/auth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import showMessage from "../showMessage";
 
@@ -93,6 +93,14 @@ const FormAuth = ({ isLogin, setIsLogin }) => {
         >
           <Input.Password />
         </Form.Item>
+        {isLogin && (
+          <Link
+            to="/reset-password"
+            className="hover:text-[#895a42] text-gray-800"
+          >
+            Forgot password?
+          </Link>
+        )}
         {!isLogin && (
           <Form.Item
             label="Confirm password"

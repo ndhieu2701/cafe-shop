@@ -14,6 +14,7 @@ import Home from "./pages/home";
 import ErrorPage from "./pages/error";
 import AuthPage from "./pages/auth";
 import Cookies from "js-cookie";
+import ResetPass from "./pages/resetPass";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,6 +36,7 @@ const router = createBrowserRouter(
         path="/auth"
         element={!isAuth ? <AuthPage /> : <Navigate to="/" />}
       />
+      <Route path="/reset-password" element={<ResetPass />}/>
       <Route path="*" element={<ErrorPage />} />
     </Route>
   )
