@@ -1,38 +1,70 @@
 import { Form, Input } from "antd";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { sendEmailReset } from "../../api/auth";
+import { sendCode, sendEmailReset, sendPass } from "../../api/auth";
 import showMessage from "../showMessage";
+
+const initialValues = {
+  email: "",
+  code: "",
+  password: "",
+  confirmPassword: "",
+};
 
 const FormResetPass = ({ isInputEmail, setIsInputEmail }) => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const [sendedEmail, setSendedEmail] = useState("");
+  const [tokenChangePass, setTokenChangePass] = useState("");
 
   useEffect(() => {
     form.resetFields();
   }, []);
 
-  const submitForm = async (value) => {
-    console.log("heheh");
+  const submitForm = async (values) => {
     try {
-      if (isInputEmail) {
-        const res = await sendEmailReset(value);
-        if (res.status === 201) {
-          setIsInputEmail(false);
-          showMessage("success", "Send email success!");
-        }
+      switch (isInputEmail) {
+        case 0:
+          const response = await sendEmailReset(values);
+          if (response.status === 201) {
+            setIsInputEmail(1);
+            setSendedEmail(values.email);
+            showMessage("success", "Send email success!");
+          }
+          break;
+        case 1:
+          const res = await sendCode({ ...values, email: sendedEmail });
+          if (res.status === 200) {
+            console.log(res);
+            setTokenChangePass(res.token);
+            setIsInputEmail(2);
+            showMessage("success", "Verify code success!");
+          }
+          break;
+        case 2:
+          const response2 = await sendPass({
+            token: tokenChangePass,
+            password: values.password,
+          });
+          if (response2.status === 200) {
+            navigate("/auth");
+            showMessage("success", "Change password success!");
+          }
+          break;
+        default:
+          break;
       }
-      //   if (!isInputEmail) {
-
-      //   }
     } catch (error) {
-      showMessage("error", error.message);
+      showMessage(
+        "error",
+        error.response.data ? error.response.data.message : error.message
+      );
     }
   };
 
   const customValidator = (rule, value) => {
     if (!value) {
-      return Promise.reject("Please input your email!");
+      return Promise.reject("Please input this field!");
     }
     return Promise.resolve();
   };
@@ -46,10 +78,10 @@ const FormResetPass = ({ isInputEmail, setIsInputEmail }) => {
       labelWrap
       form={form}
       onFinish={submitForm}
+      initialValues={initialValues}
     >
-      {isInputEmail && (
+      {isInputEmail === 0 && (
         <Form.Item
-          initialValue=""
           label="Email"
           name="email"
           validateTrigger={["onChange"]}
@@ -61,10 +93,62 @@ const FormResetPass = ({ isInputEmail, setIsInputEmail }) => {
           <Input />
         </Form.Item>
       )}
-      {!isInputEmail && (
-        <Form.Item initialValue="">
+      {isInputEmail === 1 && (
+        <Form.Item
+          label="Code"
+          name="code"
+          validateTrigger={["onChange"]}
+          rules={[{ validator: customValidator }]}
+        >
           <Input />
         </Form.Item>
+      )}
+      {isInputEmail === 2 && (
+        <>
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: "Please input your password!",
+              },
+              {
+                min: 8,
+                message: "Please input your password at least 8 characters",
+              },
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item
+            label="Confirm password"
+            name="confirmPassword"
+            dependencies={["password"]}
+            rules={[
+              {
+                required: true,
+                message: "Please input your confirm password!",
+              },
+              {
+                min: 8,
+                message: "Please input your password at least 8 characters!",
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error("The password that you entered do not match!")
+                  );
+                },
+              }),
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+        </>
       )}
       <Form.Item
         wrapperCol={{

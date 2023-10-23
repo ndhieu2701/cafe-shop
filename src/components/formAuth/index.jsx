@@ -41,7 +41,7 @@ const FormAuth = ({ isLogin, setIsLogin }) => {
         }
       }
     } catch (error) {
-      showMessage("error", error.message);
+      showMessage("error", error.response.data.message);
     }
   };
 
