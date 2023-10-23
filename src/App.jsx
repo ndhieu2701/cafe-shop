@@ -36,7 +36,7 @@ const router = createBrowserRouter(
         path="/auth"
         element={!isAuth ? <AuthPage /> : <Navigate to="/" />}
       />
-      <Route path="/reset-password" element={<ResetPass />}/>
+      <Route path="/reset-password" element={<ResetPass />} />
       <Route path="*" element={<ErrorPage />} />
     </Route>
   )

@@ -8,10 +8,12 @@ export default {
     extend: {
       backgroundImage: {
         "coffee-bg": "url('./assets/coffee-bg.jpg')",
+        "coffee-logo": "url(./assets/logo.webp)",
+        "coffee-header-panel": "url(./assets/header-panel.jpg)",
       },
       colors: {
-        "main-color": "#895a42"
-      }
+        "main-color": "#895a42",
+      },
     },
   },
   plugins: [],

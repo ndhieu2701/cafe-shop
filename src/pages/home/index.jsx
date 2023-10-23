@@ -1,10 +1,15 @@
+import { Layout } from "antd";
 import React from "react";
+import CustomHeader from "../../components/header";
 
+const layoutStyle = {
+  minHeight: "1000vh"
+}
 const Home = () => {
   return (
-    <>
-      <div>Home</div>
-    </>
+    <Layout style={layoutStyle}>
+      <CustomHeader />
+    </Layout>
   );
 };
 
