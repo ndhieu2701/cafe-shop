@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import FormAuth from "../../components/formAuth";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -10,6 +9,8 @@ const AuthPage = () => {
   const navigate = useNavigate();
   const handleChangeMode = () => {
     setIsLogin(!isLogin);
+    if (isLogin) return navigate("/auth?register=true");
+    else return navigate("/auth");
   };
 
   if (isAuth) return navigate("/");

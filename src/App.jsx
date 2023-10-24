@@ -51,6 +51,11 @@ const theme = {
       labelFontSize: "1rem",
       labelColor: "#895a42",
     },
+    Breadcrumb: {
+      itemColor: "#895a42",
+      linkColor: "#fbc65f",
+      linkHoverColor: "#fbc65f"
+    }
   },
 };
 
