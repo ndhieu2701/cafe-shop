@@ -1,15 +1,13 @@
-import { Layout } from "antd";
-import React from "react";
-import CustomHeader from "../../components/header";
+import ContainerFilter from "../../components/containerFilter";
+import CustomLayout from "../../components/customLayout";
 
-const layoutStyle = {
-  minHeight: "1000vh"
-}
 const Home = () => {
   return (
-    <Layout style={layoutStyle}>
-      <CustomHeader />
-    </Layout>
+    <CustomLayout>
+      <div className="py-[7.2rem] w-full">
+        <ContainerFilter />
+      </div>
+    </CustomLayout>
   );
 };
 

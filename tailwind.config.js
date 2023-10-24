@@ -9,7 +9,8 @@ export default {
       backgroundImage: {
         "coffee-bg": "url('./assets/coffee-bg.jpg')",
         "coffee-logo": "url(./assets/logo.webp)",
-        "coffee-header-panel": "url(./assets/header-panel.jpg)",
+        "coffee-bg-breadcrumb": "url(./assets/header-panel.jpg)",
+        "dart-img": "url(./assets/bg-dart.jpg)",
       },
       colors: {
         "main-color": "#895a42",
