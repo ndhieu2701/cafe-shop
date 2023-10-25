@@ -1,36 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Layout } from "antd";
 import UserControl from "../userControl";
-
+import { useScroll } from "../../customHook/useScroll";
 const { Header } = Layout;
 
 const CustomHeader = () => {
-  const [isScroll, setIsScroll] = useState(false);
-
-  const handleScroll = () => {
-    if (window.scrollY > 300) {
-      setIsScroll(true);
-    } else {
-      setIsScroll(false);
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  const isScroll = useScroll();
 
   const headerStyle = {
     backgroundColor: "#fff",
     color: "#895a42",
     boxShadow: isScroll ? "0px 0px 4px rgba(0, 0, 0, 0.4)" : "none",
-    minHeight: !isScroll ? "154px" : "80px",
     display: "flex",
+    minHeight: "auto",
+    padding: "50px 0",
     position: "sticky",
     top: 0,
-    zIndex: 1000
+    zIndex: 1000,
   };
 
   return (
