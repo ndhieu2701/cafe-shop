@@ -14,6 +14,7 @@ export default {
       },
       colors: {
         "main-color": "#895a42",
+        "second-color": "#fbc65f",
       },
     },
   },
