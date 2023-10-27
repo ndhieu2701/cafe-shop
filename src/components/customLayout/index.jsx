@@ -9,7 +9,7 @@ const CustomLayout = ({ children }) => {
       <CustomHeader />
       <CustomBreadCrumb />
       <div className="w-full flex bg-white">
-        <div className="max-w-[1180px] mx-auto w-full">{children}</div>
+        <div className="max-w-[1180px] mx-auto w-full px-4">{children}</div>
       </div>
     </Layout>
   );

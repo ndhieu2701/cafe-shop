@@ -9,7 +9,7 @@ const getTags = async () => {
 
 const Tags = () => {
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: "tags",
+    queryKey: ["tags"],
     queryFn: getTags,
   });
 
@@ -20,7 +20,7 @@ const Tags = () => {
       <div className="flex flex-wrap">
         {data &&
           data.map((tag) => (
-            <div className="p-1">
+            <div className="p-1" key={tag._id}>
               <Button type="primary bg-white text-main-color shadow-none ">
                 {tag.name}
               </Button>

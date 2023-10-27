@@ -13,7 +13,7 @@ const CustomHeader = () => {
     boxShadow: isScroll ? "0px 0px 4px rgba(0, 0, 0, 0.4)" : "none",
     display: "flex",
     minHeight: "auto",
-    padding: "50px 0",
+    padding: "50px 16px",
     position: "sticky",
     top: 0,
     zIndex: 1000,
