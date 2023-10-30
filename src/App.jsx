@@ -39,6 +39,8 @@ const router = createBrowserRouter(
       />
       <Route path="/reset-password" element={<ResetPass />} />
       <Route path="/form-add-product" element={<FormAddProduct />} />
+      <Route path="/category/:id" element={<Home />} />
+      <Route path="/tag/:id" element={<Home />} />
       <Route path="*" element={<ErrorPage />} />
     </Route>
   )

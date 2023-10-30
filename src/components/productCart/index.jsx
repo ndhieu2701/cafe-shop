@@ -19,7 +19,7 @@ const ProductCard = ({ product, mode }) => {
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}
         className={`bg-[#f9f9f5] relative ${
-          !mode ? "w-2/5 aspect-auto mb-6" : ""
+          !mode ? "w-2/5 mb-6" : ""
         }`}
       >
         {isHover && mode && (

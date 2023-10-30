@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Layout } from "antd";
 import UserControl from "../userControl";
 import { useScroll } from "../../customHook/useScroll";
+import { Link } from "react-router-dom";
 const { Header } = Layout;
 
 const CustomHeader = () => {
@@ -22,9 +23,9 @@ const CustomHeader = () => {
   return (
     <Header style={headerStyle}>
       <div className="flex justify-between items-center max-w-[1180px] mx-auto w-full">
-        <div className="w-[244px] flex items-center justify-center">
+        <Link to="/" className="w-[244px] flex items-center justify-center">
           <div className="bg-coffee-logo max-h-[100px] h-[68px] w-full bg-no-repeat bg-center bg-cover"></div>
-        </div>
+        </Link>
         <div className="flex items-center text-base">
           {/* card item */}
           <div className="flex items-center font-semibold cursor-pointer mr-3">
