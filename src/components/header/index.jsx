@@ -3,6 +3,7 @@ import { Layout } from "antd";
 import UserControl from "../userControl";
 import { useScroll } from "../../customHook/useScroll";
 import { Link } from "react-router-dom";
+import ProductCart from "../productCart";
 const { Header } = Layout;
 
 const CustomHeader = () => {
@@ -28,12 +29,7 @@ const CustomHeader = () => {
         </Link>
         <div className="flex items-center text-base">
           {/* card item */}
-          <div className="flex items-center font-semibold cursor-pointer mr-3">
-            <div className="min-w-[20px] border-main-color border text-center flex items-center h-5 px-3 py-4 rounded bg-main-color text-white mr-2">
-              0
-            </div>
-            Cart: <p className="hover:text-[#fbc65f] ml-2">$0.00</p>
-          </div>
+          <ProductCart />
           {/* account */}
           <UserControl />
         </div>

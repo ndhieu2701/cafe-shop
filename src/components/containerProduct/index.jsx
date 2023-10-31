@@ -1,7 +1,7 @@
 import { Button, Pagination, Select, Spin } from "antd";
 import { AppstoreOutlined, BarsOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
-import ProductCard from "../productCart";
+import ProductCard from "../productCard";
 import { scrollTop } from "../../function/scrollTop";
 import { customPagination } from "../../function/pagination";
 import useProduct from "../../customHook/useProduct.js";
