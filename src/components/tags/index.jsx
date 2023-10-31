@@ -33,7 +33,7 @@ const Tags = () => {
                     ? "bg-main-color text-white"
                     : "bg-white text-main-color"
                 } shadow-none`}
-                onClick={() => navigate(`/tag/${tag._id}?tag-name=${tag.name}`)}
+                onClick={() => navigate(`/tag/${tag._id}?name=${tag.name}`)}
               >
                 {tag.name}
               </Button>

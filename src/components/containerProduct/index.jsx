@@ -7,15 +7,14 @@ import { customPagination } from "../../function/pagination";
 import useProduct from "../../customHook/useProduct.js";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { minMaxPriceAtom, productAtom } from "../../recoil/product";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const options = [
   { label: "Default sorting", value: 0 },
   { label: "Sort by popularity", value: 1 },
-  { label: "Sort by average rating", value: 2 },
-  { label: "Sort by latest", value: 3 },
-  { label: "Sort by price: low to high", value: 4 },
-  { label: "Sort by price: high to low", value: 5 },
+  { label: "Sort by latest", value: 2 },
+  { label: "Sort by price: low to high", value: 3 },
+  { label: "Sort by price: high to low", value: 4 },
 ];
 
 const ContainerProduct = () => {
@@ -26,8 +25,11 @@ const ContainerProduct = () => {
   const pageSize = 6;
   const [showTotal, setShowTotal] = useState("");
   const location = useLocation();
+  const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search.split("?")[1]);
   const isHavePriceQuery = Boolean(searchParams.get("minPrice"));
+  const sortParam = searchParams.get("sort") * 1;
+  const [selectValue, setSelectValue] = useState(options[sortParam].value);
 
   const handleShowTotal = (total, range) => {
     setShowTotal(`${range[0]}-${range[1]} of ${total} items`);
@@ -43,6 +45,20 @@ const ContainerProduct = () => {
     setPage(page);
     setProductState(customPagination(page, pageSize, data.products));
   };
+
+  const handleChangeSelectValue = (value) => {
+    setSelectValue(value);
+    setPage(1);
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set("sort", value);
+    navigate(`${location.pathname}?${newSearchParams.toString()}`);
+  };
+
+  useEffect(() => {
+    if (!sortParam) {
+      setSelectValue(options[0].value);
+    }
+  }, []);
 
   useEffect(() => {
     setProductState([]);
@@ -85,7 +101,8 @@ const ContainerProduct = () => {
           <Select
             style={{ width: "100%", height: 40 }}
             options={options}
-            defaultValue={options[0].value}
+            value={selectValue}
+            onChange={handleChangeSelectValue}
           />
         </div>
       </div>

@@ -19,6 +19,7 @@ const useProduct = () => {
   const searchParams = new URLSearchParams(location.search.split("?")[1]);
   const minPrice = searchParams.get("minPrice");
   const maxPrice = searchParams.get("maxPrice");
+  const sort = searchParams.get('sort')
 
   const payload = new Object();
   payload[filterWith] = filterID;
@@ -26,9 +27,12 @@ const useProduct = () => {
     payload.minPrice = minPrice;
     payload.maxPrice = maxPrice;
   }
+  if(sort){
+    payload.sort = sort
+  }
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["getFilterProductQuery", filterID, filterWith, minPrice, maxPrice],
+    queryKey: ["getFilterProductQuery", filterID, filterWith, minPrice, maxPrice, sort],
     queryFn: () => getProducts(payload),
   });
   return { data, isLoading, isError, error };
