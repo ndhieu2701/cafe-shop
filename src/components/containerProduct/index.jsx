@@ -1,11 +1,13 @@
 import { Button, Pagination, Select, Spin } from "antd";
 import { AppstoreOutlined, BarsOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
-import { getAllProducts } from "../../api/product";
-import { useQuery } from "@tanstack/react-query";
 import ProductCard from "../productCart";
 import { scrollTop } from "../../function/scrollTop";
 import { customPagination } from "../../function/pagination";
+import useProduct from "../../customHook/useProduct.js";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { minMaxPriceAtom, productAtom } from "../../recoil/product";
+import { useLocation } from "react-router-dom";
 
 const options = [
   { label: "Default sorting", value: 0 },
@@ -16,27 +18,16 @@ const options = [
   { label: "Sort by price: high to low", value: 5 },
 ];
 
-const getAllProduct = async () => {
-  const res = await getAllProducts();
-  return res.products;
-};
-
 const ContainerProduct = () => {
   const [mode, setMode] = useState(true);
-  const [products, setProducts] = useState([]);
-  const [filterProducts, setFilterProducts] = useState([]);
+  const [productState, setProductState] = useRecoilState(productAtom);
+  const setMinMaxPrice = useSetRecoilState(minMaxPriceAtom);
   const [page, setPage] = useState(1);
   const pageSize = 6;
   const [showTotal, setShowTotal] = useState("");
-
-  const handleChangePage = (page) => {
-    setPage(page);
-    setFilterProducts(customPagination(page, pageSize, products));
-  };
-
-  useEffect(() => {
-    scrollTop();
-  }, [page]);
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search.split("?")[1]);
+  const isHavePriceQuery = Boolean(searchParams.get("minPrice"));
 
   const handleShowTotal = (total, range) => {
     setShowTotal(`${range[0]}-${range[1]} of ${total} items`);
@@ -46,17 +37,26 @@ const ContainerProduct = () => {
     setMode(!mode);
   };
 
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["getAllProduct"],
-    queryFn: getAllProduct,
-  });
+  const { data, isLoading, isError, error } = useProduct();
+
+  const handleChangePage = (page) => {
+    setPage(page);
+    setProductState(customPagination(page, pageSize, data.products));
+  };
 
   useEffect(() => {
+    setProductState([]);
     if (data) {
-      setProducts(data);
-      setFilterProducts(customPagination(page, pageSize, data));
+      if (!isHavePriceQuery) {
+        setMinMaxPrice({ min: data.minPrice, max: data.maxPrice });
+      }
+      setProductState(customPagination(page, pageSize, data.products));
     }
   }, [data]);
+
+  useEffect(() => {
+    scrollTop();
+  }, [page, data]);
 
   return (
     <div className="w-2/3 ml-8">
@@ -97,17 +97,17 @@ const ContainerProduct = () => {
       )}
       {isError && <div>Something went wrong</div>}
       <div className={`mt-8 w-full ${mode ? "grid grid-cols-2 gap-4" : ""}`}>
-        {filterProducts.map((product) => (
+        {productState.map((product) => (
           <div key={product._id}>
-            <ProductCard product={product} mode={mode}/>
+            <ProductCard product={product} mode={mode} />
           </div>
         ))}
       </div>
       {data && (
-        <div className="mt-10 w-full text-center">
+        <div className="my-10 w-full text-center">
           <Pagination
             defaultCurrent={1}
-            total={products.length}
+            total={data.products.length}
             defaultPageSize={pageSize}
             current={page}
             onChange={handleChangePage}
