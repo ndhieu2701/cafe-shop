@@ -1,7 +1,7 @@
 import { Form, Input } from "antd";
 import React, { useEffect } from "react";
 import { login, register } from "../../api/auth";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import showMessage from "../showMessage";
 
@@ -22,6 +22,15 @@ const registerInitValues = {
 const FormAuth = ({ isLogin, setIsLogin }) => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const registerParam = queryParams.get("register");
+
+  useEffect(() => {
+    if (registerParam) {
+      setIsLogin(false);
+    }
+  }, []);
 
   const submitForm = async (values) => {
     try {
@@ -30,6 +39,7 @@ const FormAuth = ({ isLogin, setIsLogin }) => {
         const res = await register(payload);
         if (res.status === 201) {
           setIsLogin(true);
+          navigate("/auth")
           showMessage("success", "Register success!");
         }
       } else {

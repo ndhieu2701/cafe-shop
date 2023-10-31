@@ -15,6 +15,7 @@ import ErrorPage from "./pages/error";
 import AuthPage from "./pages/auth";
 import Cookies from "js-cookie";
 import ResetPass from "./pages/resetPass";
+import FormAddProduct from "./pages/formAddProduct";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -36,7 +37,10 @@ const router = createBrowserRouter(
         path="/auth"
         element={!isAuth ? <AuthPage /> : <Navigate to="/" />}
       />
-      <Route path="/reset-password" element={<ResetPass />}/>
+      <Route path="/reset-password" element={<ResetPass />} />
+      <Route path="/form-add-product" element={<FormAddProduct />} />
+      <Route path="/category/:id" element={<Home />} />
+      <Route path="/tag/:id" element={<Home />} />
       <Route path="*" element={<ErrorPage />} />
     </Route>
   )
@@ -50,6 +54,11 @@ const theme = {
     Form: {
       labelFontSize: "1rem",
       labelColor: "#895a42",
+    },
+    Breadcrumb: {
+      itemColor: "#895a42",
+      linkColor: "#fbc65f",
+      linkHoverColor: "#fbc65f",
     },
   },
 };
