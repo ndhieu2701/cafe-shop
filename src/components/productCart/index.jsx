@@ -1,19 +1,14 @@
 import React from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import cartState from "../../recoil/cart";
 import { calculatePrice } from "../../function/calculatePrice";
 import { Button, Divider, Popover } from "antd";
 import ProductCartItem from "../productCartItem";
+import { useNavigate } from "react-router-dom";
 
 export const ProductItemWrap = () => {
-  const [productCart, setProductCart] = useRecoilState(cartState);
-
-  const handleChangeProductCart = (productID) => {
-    const newProductCart = productCart.filter(
-      (product) => product._id !== productID
-    );
-    setProductCart(newProductCart);
-  };
+  const productCart = useRecoilValue(cartState);
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -21,16 +16,29 @@ export const ProductItemWrap = () => {
         {productCart.length === 0 && <p>No product in your cart.</p>}
         {productCart.map((product, index) => (
           <div key={product._id}>
-            <ProductCartItem
-              product={product}
-              handleChangeProductCart={handleChangeProductCart}
-            />
+            <ProductCartItem product={product} />
             {index !== productCart.length - 1 && <Divider />}
           </div>
         ))}
       </div>
       <Divider />
-      <Button>View card</Button>
+      <div className="flex items-center justify-between">
+        <Button
+          type="primary"
+          className="bg-main-color font-semibold shadow-none"
+          onClick={() => navigate("/cart")}
+        >
+          View card
+        </Button>
+        {productCart.length > 0 && (
+          <Button
+            type="primary"
+            className="bg-second-color text-main-color font-semibold shadow-none"
+          >
+            Purchase
+          </Button>
+        )}
+      </div>
     </div>
   );
 };
