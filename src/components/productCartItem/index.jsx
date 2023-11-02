@@ -1,8 +1,7 @@
-import { CloseOutlined, DeleteOutlined } from "@ant-design/icons";
-import { Button } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
 import React from "react";
 
-const ProductCartItem = ({ product, handleChangeProductCart }) => {
+const ProductCartItem = ({ product }) => {
   return (
     <div className="flex items-center mt-4 ml-2 flex-1 justify-between">
       <div className="w-4/5">
@@ -13,10 +12,6 @@ const ProductCartItem = ({ product, handleChangeProductCart }) => {
         <CloseOutlined />
         <p className="ml-4 text-xl">{product.quantityItem}</p>
       </div>
-      <Button
-        icon={<DeleteOutlined />}
-        onClick={() => handleChangeProductCart(product._id)}
-      />
     </div>
   );
 };

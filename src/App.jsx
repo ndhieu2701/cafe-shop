@@ -16,6 +16,7 @@ import AuthPage from "./pages/auth";
 import Cookies from "js-cookie";
 import ResetPass from "./pages/resetPass";
 import FormAddProduct from "./pages/formAddProduct";
+import Cart from "./pages/cart";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,6 +42,7 @@ const router = createBrowserRouter(
       <Route path="/form-add-product" element={<FormAddProduct />} />
       <Route path="/category/:id" element={<Home />} />
       <Route path="/tag/:id" element={<Home />} />
+      <Route path="/cart" element={<Cart />} />
       <Route path="*" element={<ErrorPage />} />
     </Route>
   )
