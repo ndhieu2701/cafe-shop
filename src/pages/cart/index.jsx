@@ -1,15 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomLayout from "../../components/customLayout";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import cartState from "../../recoil/cart";
 import { Button, InputNumber, Modal, Table } from "antd";
 import {
+  ArrowLeftOutlined,
   DeleteOutlined,
   MinusOutlined,
   PlusOutlined,
   SaveOutlined,
 } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { scrollTop } from "../../function/scrollTop";
+import selectedProducts from "../../recoil/selectedProduct";
+import Cookies from "js-cookie";
+import { updateUserCart } from "../../api/cart";
+import userAtom from "../../recoil/user";
 
 const Cart = () => {
   const [productCart, setProductCart] = useRecoilState(cartState);
@@ -18,6 +24,16 @@ const Cart = () => {
   );
   const [openModalConfirm, setOpenModalConfirm] = useState(false);
   const [selectedID, setSelectedID] = useState("");
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [isLoading, setIsLoading] = useState(productCart.map((item) => false));
+  const setSelectedProductID = useSetRecoilState(selectedProducts);
+  const navigate = useNavigate();
+  const isLogin = Cookies.get("token");
+  const user = useRecoilValue(userAtom);
+
+  useEffect(() => {
+    scrollTop();
+  }, []);
 
   const handleChangeOpenModal = () => {
     setOpenModalConfirm(!openModalConfirm);
@@ -54,13 +70,56 @@ const Cart = () => {
   };
 
   //   change this function to async await when login
-  const saveValueChange = (index) => {
+  const saveValueChange = async (index, productID) => {
     const newProductCart = [...productCart];
     newProductCart[index] = {
       ...newProductCart[index],
       quantityItem: productsChange[index],
     };
-    setProductCart(newProductCart);
+    if (!isLogin) {
+      setProductCart(newProductCart);
+    } else {
+      try {
+        const updateProductCart = newProductCart.map((product) => ({
+          product: product._id,
+          quantityItem: product.quantityItem,
+        }));
+        const newLoading = [...isLoading];
+        newLoading[index] = true;
+        setIsLoading(newLoading);
+        const res = await updateUserCart({
+          userID: user._id,
+          products: updateProductCart,
+        });
+        if (res.status === 201) {
+          const newData = res.cart.products.map((product) => ({
+            ...product.product,
+            quantityItem: product.quantityItem,
+          }));
+          setProductCart(newData);
+          newLoading[index] = false;
+          setIsLoading(newLoading);
+        }
+      } catch (error) {
+        newLoading[index] = false;
+        setIsLoading(newLoading);
+        console.log(error.message);
+      }
+    }
+  };
+
+  const handleCheckout = () => {
+    setSelectedProductID(selectedRowKeys);
+    navigate("/checkout");
+  };
+
+  const onSelectChange = (newSelectedRowKeys) => {
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
   };
 
   const products = productCart.map((product) => ({
@@ -141,13 +200,16 @@ const Cart = () => {
             <Button
               icon={<SaveOutlined />}
               className="mr-2"
+              size="large"
               disabled={
                 productCart[index].quantityItem === productsChange[index]
               }
-              onClick={() => saveValueChange(index)}
+              onClick={() => saveValueChange(index, record._id)}
+              loading={isLoading[index]}
             />
             <Button
               icon={<DeleteOutlined />}
+              size="large"
               onClick={() => (
                 setSelectedID(record._id), handleChangeOpenModal()
               )}
@@ -170,7 +232,7 @@ const Cart = () => {
             columns={columns}
             dataSource={products}
             pagination={false}
-            rowSelection={{}}
+            rowSelection={rowSelection}
           />
           <Modal
             title="Are you sure removing this product?"
@@ -180,7 +242,27 @@ const Cart = () => {
             okButtonProps={{
               className: "bg-main-color shadow-none text-white",
             }}
+            centered
           />
+          <div className="sticky bottom-0 w-full py-8 flex justify-end bg-white z-30">
+            <Button
+              className="mr-4 shadow-none text-base"
+              size="large"
+              icon={<ArrowLeftOutlined />}
+              onClick={() => navigate(-1)}
+            >
+              Go back
+            </Button>
+            <Button
+              type="primary"
+              size="large"
+              className="bg-main-color shadow-none text-base"
+              onClick={() => handleCheckout()}
+              disabled={!selectedRowKeys.length > 0}
+            >
+              Checkout
+            </Button>
+          </div>
         </div>
       </div>
     </CustomLayout>

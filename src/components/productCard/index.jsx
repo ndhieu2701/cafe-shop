@@ -1,26 +1,59 @@
 import { Button, Card } from "antd";
 import React, { useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import cartState from "../../recoil/cart";
+import userAtom from "../../recoil/user";
 import Cookies from "js-cookie";
+import { updateUserCart } from "../../api/cart";
+import { useQuery } from "@tanstack/react-query";
+import showMessage from "../showMessage";
 
 const { Meta } = Card;
+
+const updateCart = async (userID, products) => {
+  const res = await updateUserCart({ userID, products });
+  return res;
+};
+
 const ProductCard = ({ product, mode }) => {
   const [isHover, setIsHover] = useState(false);
   const [productCart, setProductCart] = useRecoilState(cartState);
+  const [loading, setLoading] = useState(false);
+  const user = useRecoilValue(userAtom);
   const isLogin = Boolean(Cookies.get("token"));
   const isInCart = productCart.find((item) => item._id === product._id);
 
-  const handleChangeCart = () => {
+  const handleChangeCart = async () => {
+    let newProductCart;
+    let payloadCart = productCart.map((product) => ({
+      product: product._id,
+      quantityItem: product.quantityItem,
+    }));
+    if (!isInCart) {
+      newProductCart = [...productCart, { ...product, quantityItem: 1 }];
+      payloadCart = [...payloadCart, { product: product._id, quantityItem: 1 }];
+    } else {
+      newProductCart = productCart.filter((item) => item._id !== product._id);
+      payloadCart = payloadCart.filter((item) => item.product !== product._id);
+    }
     if (!isLogin) {
-      return setProductCart((prevCart) => {
-        if (!isInCart) {
-          return [...prevCart, { ...product, quantityItem: 1 }];
-        } else {
-          const newCart = prevCart.filter((item) => item._id !== product._id);
-          return newCart;
+      setProductCart(newProductCart);
+    } else {
+      try {
+        setLoading(true);
+        const res = await updateCart(user._id, payloadCart);
+        if (res.status === 201) {
+          const newData = res.cart.products.map((product) => ({
+            ...product.product,
+            quantityItem: product.quantityItem,
+          }));
+          setProductCart(newData);
+          setLoading(false);
         }
-      });
+      } catch (error) {
+        setLoading(false)
+        console.log(error.message);
+      }
     }
   };
 
@@ -45,6 +78,7 @@ const ProductCard = ({ product, mode }) => {
               type="primary"
               className="shadow-none w-40 h-10 bg-[#2db7f5] text-base"
               onClick={handleChangeCart}
+              loading={loading}
             >
               {!isInCart ? "Add to cart" : "Remove in cart"}
             </Button>

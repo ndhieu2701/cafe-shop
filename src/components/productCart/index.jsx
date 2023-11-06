@@ -22,23 +22,13 @@ export const ProductItemWrap = () => {
         ))}
       </div>
       <Divider />
-      <div className="flex items-center justify-between">
-        <Button
-          type="primary"
-          className="bg-main-color font-semibold shadow-none"
-          onClick={() => navigate("/cart")}
-        >
-          View card
-        </Button>
-        {productCart.length > 0 && (
-          <Button
-            type="primary"
-            className="bg-second-color text-main-color font-semibold shadow-none"
-          >
-            Purchase
-          </Button>
-        )}
-      </div>
+      <Button
+        type="primary"
+        className="bg-main-color font-semibold shadow-none"
+        onClick={() => navigate("/cart")}
+      >
+        View card
+      </Button>
     </div>
   );
 };
