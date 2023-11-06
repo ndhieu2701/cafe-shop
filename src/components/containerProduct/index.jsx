@@ -8,6 +8,8 @@ import useProduct from "../../customHook/useProduct.js";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { minMaxPriceAtom, productAtom } from "../../recoil/product";
 import { useLocation, useNavigate } from "react-router-dom";
+import useCart from "../../customHook/useCart.js";
+import cartState from "../../recoil/cart.js";
 
 const options = [
   { label: "Default sorting", value: 0 },
@@ -30,6 +32,7 @@ const ContainerProduct = () => {
   const isHavePriceQuery = Boolean(searchParams.get("minPrice"));
   const sortParam = searchParams.get("sort") * 1;
   const [selectValue, setSelectValue] = useState(options[sortParam].value);
+  const setCart = useSetRecoilState(cartState);
 
   const handleShowTotal = (total, range) => {
     setShowTotal(`${range[0]}-${range[1]} of ${total} items`);
@@ -59,6 +62,12 @@ const ContainerProduct = () => {
       setSelectValue(options[0].value);
     }
   }, []);
+
+  const cart = useCart();
+
+  useEffect(() => {
+    if (cart?.data) setCart(cart.data);
+  }, [cart]);
 
   useEffect(() => {
     setProductState([]);

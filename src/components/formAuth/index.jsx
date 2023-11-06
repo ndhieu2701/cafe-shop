@@ -4,6 +4,8 @@ import { login, register } from "../../api/auth";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import showMessage from "../showMessage";
+import { useSetRecoilState } from "recoil";
+import userAtom from "../../recoil/user";
 
 const initialValues = {
   email: "",
@@ -25,6 +27,7 @@ const FormAuth = ({ isLogin, setIsLogin }) => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const registerParam = queryParams.get("register");
+  const setUser = useSetRecoilState(userAtom)
 
   useEffect(() => {
     if (registerParam) {
@@ -39,13 +42,14 @@ const FormAuth = ({ isLogin, setIsLogin }) => {
         const res = await register(payload);
         if (res.status === 201) {
           setIsLogin(true);
-          navigate("/auth")
+          navigate("/auth");
           showMessage("success", "Register success!");
         }
       } else {
         const res = await login(values);
         if (res.status === 200) {
           Cookies.set("token", res.token);
+          setUser(res.user)
           showMessage("success", "Login success!");
           navigate("/");
         }

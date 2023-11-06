@@ -10,7 +10,9 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     config.headers.Authorization = `Bearer ${Cookies.get("token")}`;
-    config.headers["Content-Type"] = "*/*"
+    if (config.method === "PUT") {
+      config.headers["Content-Type"] = "application/json";
+    }
     return config;
   },
   (error) => Promise.reject(error)
@@ -19,6 +21,7 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.log(error);
     if (error.response.status !== 401) {
       return Promise.reject(error);
     }

@@ -17,6 +17,7 @@ import Cookies from "js-cookie";
 import ResetPass from "./pages/resetPass";
 import FormAddProduct from "./pages/formAddProduct";
 import Cart from "./pages/cart";
+import Checkout from "./pages/checkout";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -43,6 +44,7 @@ const router = createBrowserRouter(
       <Route path="/category/:id" element={<Home />} />
       <Route path="/tag/:id" element={<Home />} />
       <Route path="/cart" element={<Cart />} />
+      <Route path="/checkout" element={<Checkout />} />
       <Route path="*" element={<ErrorPage />} />
     </Route>
   )
