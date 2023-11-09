@@ -11,7 +11,7 @@ const CustomBreadCrumb = () => {
   return (
     <div className="w-full min-h-[200px] bg-coffee-bg-breadcrumb bg-no-repeat bg-center bg-cover flex flex-col items-center justify-center text-white">
       <h1 className="text-6xl font-semibold pt-9 pb-8 italic">
-        {name === 'null' ? paths[1] === "" ? "Shop" : pathFirst : paths[1] === 'tag' ? `Tag: ${name}`: name}
+        ~ {name === 'null' ? paths[1] === "" ? "Coffee Luck" : pathFirst : paths[1] === 'tag' ? `Tag: ${name}`: name} ~
       </h1>
     </div>
   );
