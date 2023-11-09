@@ -24,9 +24,10 @@ const Cart = () => {
   );
   const [openModalConfirm, setOpenModalConfirm] = useState(false);
   const [selectedID, setSelectedID] = useState("");
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  // const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [isLoading, setIsLoading] = useState(productCart.map((item) => false));
-  const setSelectedProductID = useSetRecoilState(selectedProducts);
+  const [selectedProduct, setSelectedProductID] =
+    useRecoilState(selectedProducts);
   const navigate = useNavigate();
   const isLogin = Cookies.get("token");
   const user = useRecoilValue(userAtom);
@@ -109,16 +110,16 @@ const Cart = () => {
   };
 
   const handleCheckout = () => {
-    setSelectedProductID(selectedRowKeys);
+    // setSelectedProductID(selectedRowKeys);
     navigate("/checkout");
   };
 
   const onSelectChange = (newSelectedRowKeys) => {
-    setSelectedRowKeys(newSelectedRowKeys);
+    setSelectedProductID(newSelectedRowKeys);
   };
 
   const rowSelection = {
-    selectedRowKeys,
+    selectedRowKeys: selectedProduct,
     onChange: onSelectChange,
   };
 
@@ -232,7 +233,7 @@ const Cart = () => {
             columns={columns}
             dataSource={products}
             pagination={false}
-            rowSelection={rowSelection}
+            rowSelection={{ type: "checkbox", ...rowSelection }}
           />
           <Modal
             title="Are you sure removing this product?"
@@ -244,9 +245,9 @@ const Cart = () => {
             }}
             centered
           />
-          <div className="sticky bottom-0 w-full py-8 flex justify-end bg-white z-30">
+          <div className="sticky bottom-0 w-full py-8 pr-4 flex justify-end bg-white border-dashed border-4 rounded-lg z-30">
             <Button
-              className="mr-4 shadow-none text-base"
+              className="mr-4 shadow-none text-base bg-white"
               size="large"
               icon={<ArrowLeftOutlined />}
               onClick={() => navigate(-1)}
@@ -258,7 +259,7 @@ const Cart = () => {
               size="large"
               className="bg-main-color shadow-none text-base"
               onClick={() => handleCheckout()}
-              disabled={!selectedRowKeys.length > 0}
+              disabled={!selectedProduct.length > 0}
             >
               Checkout
             </Button>
