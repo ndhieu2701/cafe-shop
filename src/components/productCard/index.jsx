@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import { updateUserCart } from "../../api/cart";
 import { useQuery } from "@tanstack/react-query";
 import showMessage from "../showMessage";
+import { useNavigate } from "react-router";
 
 const { Meta } = Card;
 
@@ -22,8 +23,10 @@ const ProductCard = ({ product, mode }) => {
   const user = useRecoilValue(userAtom);
   const isLogin = Boolean(Cookies.get("token"));
   const isInCart = productCart.find((item) => item._id === product._id);
+  const navigate = useNavigate();
 
-  const handleChangeCart = async () => {
+  const handleChangeCart = async (e) => {
+    e.stopPropagation()
     let newProductCart;
     let payloadCart = productCart.map((product) => ({
       product: product._id,
@@ -51,10 +54,14 @@ const ProductCard = ({ product, mode }) => {
           setLoading(false);
         }
       } catch (error) {
-        setLoading(false)
+        setLoading(false);
         console.log(error.message);
       }
     }
+  };
+
+  const handleNavigate = () => {
+    navigate(`/product/${product._id}`);
   };
 
   return (
@@ -71,13 +78,14 @@ const ProductCard = ({ product, mode }) => {
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}
         className={`bg-[#f9f9f5] relative ${!mode ? "w-2/5 mb-6" : ""}`}
+        onClick={handleNavigate}
       >
         {isHover && mode && (
           <div className="absolute top-0 left-0 w-full h-full bg-second-color/40 flex items-center justify-center rounded">
             <Button
               type="primary"
               className="shadow-none w-40 h-10 bg-[#2db7f5] text-base"
-              onClick={handleChangeCart}
+              onClick={(e) => handleChangeCart(e)}
               loading={loading}
             >
               {!isInCart ? "Add to cart" : "Remove in cart"}

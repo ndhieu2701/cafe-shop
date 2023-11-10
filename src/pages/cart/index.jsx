@@ -135,7 +135,7 @@ const Cart = () => {
       dataIndex: "name",
       with: 200,
       render: (text, record) => (
-        <Link className="hover:text-main-color">{text}</Link>
+        <Link to={`/product/${record._id}`} className="hover:text-main-color">{text}</Link>
       ),
     },
     {

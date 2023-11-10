@@ -22,6 +22,7 @@ import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import configs from "./config";
 import OrderNotify from "./pages/orderNotify";
 import ProductDetails from "./pages/productDetails";
+import NotFound from "./pages/404";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -51,6 +52,7 @@ const router = createBrowserRouter(
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/success" element={<OrderNotify />} />
       <Route path="/product/:id" element={<ProductDetails />} />
+      <Route path="/404" element={<NotFound />} />
       <Route path="*" element={<ErrorPage />} />
     </Route>
   )
@@ -70,6 +72,13 @@ const theme = {
       linkColor: "#fbc65f",
       linkHoverColor: "#fbc65f",
     },
+    Tabs: {
+      horizontalMargin: "0",
+      cardBg: "#ccc"
+    },
+    Input: {
+      activeBg: "#fff"
+    }
   },
 };
 
