@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getProduct } from "../api/product";
+import { getAllProduct } from "../api/product";
 import { useLocation } from "react-router-dom";
 
 // const getAllProduct = async () => {
@@ -8,7 +8,7 @@ import { useLocation } from "react-router-dom";
 // };
 
 const getProducts = async (payload) => {
-  const res = await getProduct(payload);
+  const res = await getAllProduct(payload);
   return res;
 };
 
