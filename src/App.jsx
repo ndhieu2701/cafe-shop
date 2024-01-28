@@ -16,6 +16,13 @@ import AuthPage from "./pages/auth";
 import Cookies from "js-cookie";
 import ResetPass from "./pages/resetPass";
 import FormAddProduct from "./pages/formAddProduct";
+import Cart from "./pages/cart";
+import Checkout from "./pages/checkout";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import configs from "./config";
+import OrderNotify from "./pages/orderNotify";
+import ProductDetails from "./pages/productDetails";
+import NotFound from "./pages/404";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,6 +48,11 @@ const router = createBrowserRouter(
       <Route path="/form-add-product" element={<FormAddProduct />} />
       <Route path="/category/:id" element={<Home />} />
       <Route path="/tag/:id" element={<Home />} />
+      <Route path="/cart" element={<Cart />} />
+      <Route path="/checkout" element={<Checkout />} />
+      <Route path="/success" element={<OrderNotify />} />
+      <Route path="/product/:id" element={<ProductDetails />} />
+      <Route path="/404" element={<NotFound />} />
       <Route path="*" element={<ErrorPage />} />
     </Route>
   )
@@ -60,20 +72,29 @@ const theme = {
       linkColor: "#fbc65f",
       linkHoverColor: "#fbc65f",
     },
+    Tabs: {
+      horizontalMargin: "0",
+      cardBg: "#ccc"
+    },
+    Input: {
+      activeBg: "#fff"
+    }
   },
 };
 
 function App() {
   return (
-    <AntdConfigProvider theme={theme}>
-      <QueryClientProvider client={queryClient}>
-        <RecoilRoot>
-          <RouterProvider router={router} />
-          <Suspense fallback={null}></Suspense>
-        </RecoilRoot>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </AntdConfigProvider>
+    <PayPalScriptProvider options={{ clientId: configs.CLIENT_ID, currency: "USD"}}>
+      <AntdConfigProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <RecoilRoot>
+            <RouterProvider router={router} />
+            <Suspense fallback={null}></Suspense>
+          </RecoilRoot>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </AntdConfigProvider>
+    </PayPalScriptProvider>
   );
 }
 

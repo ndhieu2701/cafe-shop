@@ -1,13 +1,17 @@
 import { Button, Pagination, Select, Spin } from "antd";
 import { AppstoreOutlined, BarsOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
-import ProductCard from "../productCart";
+import ProductCard from "../productCard";
 import { scrollTop } from "../../function/scrollTop";
 import { customPagination } from "../../function/pagination";
 import useProduct from "../../customHook/useProduct.js";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { minMaxPriceAtom, productAtom } from "../../recoil/product";
 import { useLocation, useNavigate } from "react-router-dom";
+import userAtom from "../../recoil/user.js";
+import { getUserCart } from "../../api/cart.js";
+import cartState from "../../recoil/cart.js";
+import Cookies from "js-cookie";
 
 const options = [
   { label: "Default sorting", value: 0 },
@@ -30,6 +34,8 @@ const ContainerProduct = () => {
   const isHavePriceQuery = Boolean(searchParams.get("minPrice"));
   const sortParam = searchParams.get("sort") * 1;
   const [selectValue, setSelectValue] = useState(options[sortParam].value);
+  const user = useRecoilValue(userAtom);
+  const setCart = useSetRecoilState(cartState);
 
   const handleShowTotal = (total, range) => {
     setShowTotal(`${range[0]}-${range[1]} of ${total} items`);
@@ -57,6 +63,23 @@ const ContainerProduct = () => {
   useEffect(() => {
     if (!sortParam) {
       setSelectValue(options[0].value);
+    }
+  }, [sortParam]);
+
+  const getCart = async (userID) => {
+    const res = await getUserCart({ userID });
+    setCart(
+      res.cart.products.map((product) => ({
+        ...product.product,
+        quantityItem: product.quantityItem,
+      }))
+    );
+    Cookies.set("cart-id", res.cart._id);
+  };
+
+  useEffect(() => {
+    if (Cookies.get("token")) {
+      getCart(user._id);
     }
   }, []);
 

@@ -8,7 +8,7 @@ import { scrollTop } from "../../function/scrollTop";
 
 const Home = () => {
   const location = useLocation();
-  
+
   useEffect(() => {
     scrollTop();
   }, [location.pathname]);
